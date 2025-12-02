@@ -15,7 +15,7 @@ const temples = [
     deity: "Goddess Mangaladevi",
     shortDescription: "The presiding deity of Mangalore",
     description: "Ancient temple dedicated to Goddess Mangaladevi, the city's namesake deity. Known for its historical significance and unique architectural style.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Mangaladevi_Temple_Mangalore_2.jpg/1024px-Mangaladevi_Temple_Mangalore_2.jpg",
     region: "Mangalore",
     openingHours: [
       { day: "Monday", hours: "6:00 AM - 12:30 PM & 5:30 PM - 7:30 PM" },
@@ -36,17 +36,6 @@ const temples = [
         answer: "Daily poojas include Abhisheka, Archana, and Aarti. Special poojas are conducted during festivals like Navaratri and Deepavali."
       }
     ],
-    events: [
-      {
-        id: "navaratri-2024",
-        title: "Navaratri Festival",
-        date: "October 3-12, 2024",
-        time: "6:00 AM - 9:00 PM",
-        type: "festival",
-        description: "Nine days of special celebrations with cultural programs, traditional music, and grand processions.",
-        contact: "Temple Office: +91-824-2456789"
-      }
-    ],
     travelInfo: {
       fromJubileeBusStation: "18 Kms",
       fromShamirpet: "8 Kms",
@@ -60,7 +49,7 @@ const temples = [
     deity: "Lord Manjunatha (Shiva)",
     shortDescription: "Historic hill temple devoted to Lord Shiva",
     description: "A historic hill temple devoted to Lord Manjunatha (Shiva), featuring ancient bronze statues and panoramic views of Mangalore city.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Kadri_temple_entrance_mangalore.jpg/1024px-Kadri_temple_entrance_mangalore.jpg",
     region: "Mangalore",
     openingHours: [],
     faqs: [],
@@ -78,7 +67,7 @@ const temples = [
     deity: "Lord Gokarnanatheshwara",
     shortDescription: "Famous for grand Dasara celebrations",
     description: "Famous for its grand Dasara celebrations and modern architecture with stunning illumination, dedicated to Lord Gokarnanatheshwara.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Gokarnatheshwara_Temple_7042008.jpg/1024px-Gokarnatheshwara_Temple_7042008.jpg",
     region: "Mangalore",
     openingHours: [],
     faqs: [],
@@ -97,15 +86,15 @@ const importData = async () => {
 
     // Clear existing data
     await Temple.deleteMany();
-    console.log('🗑️  Data Destroyed...');
+    console.log('Data Destroyed...');
 
     // Insert new data
     await Temple.insertMany(temples);
-    console.log('✅ Data Imported...');
+    console.log('Data Imported...');
 
     process.exit();
   } catch (error) {
-    console.error(`❌ Error: ${error}`);
+    console.error(`Error: ${error}`);
     process.exit(1);
   }
 };
@@ -114,10 +103,10 @@ const destroyData = async () => {
   try {
     await connectDatabase();
     await Temple.deleteMany();
-    console.log('🗑️  Data Destroyed...');
+    console.log('Data Destroyed...');
     process.exit();
   } catch (error) {
-    console.error(`❌ Error: ${error}`);
+    console.error(`Error: ${error}`);
     process.exit(1);
   }
 };

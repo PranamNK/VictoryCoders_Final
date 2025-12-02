@@ -92,7 +92,7 @@ export const authAPI = {
 // Temple API
 export const templeAPI = {
   getAll: async (params?: { region?: string; sort?: string; search?: string }): Promise<{ success: boolean; count: number; data: Temple[] }> => {
-    const query = new URLSearchParams(params as any).toString();
+    const query = new URLSearchParams((params || {}) as unknown as Record<string, string>).toString();
     const res = await fetch(`${API_URL}/temples${query ? `?${query}` : ''}`);
     if (!res.ok) throw new Error('Failed to fetch temples');
     return res.json();

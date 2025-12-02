@@ -9,7 +9,7 @@ import { templeDescriptions } from "@/data/translations/templeDescriptions";
 declare global {
   interface Window {
     responsiveVoice: {
-      speak: (text: string, voice: string, options: any) => void;
+      speak: (text: string, voice: string, options: Record<string, unknown>) => void;
     };
   }
 }
@@ -48,19 +48,19 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
   // Memoize the full story to prevent recalculation on every render
   const fullStory = useMemo(() => {
     if (!temple) return '';
-    
+
     // Map temple ID to description key
     let baseId = temple.id.replace('-temple', '').replace('-shri-', '').replace('shri-', '');
     const firstWord = baseId.split('-')[0];
     const descriptionKey = `temple.${firstWord}`;
     const fullStoryKey = `${descriptionKey}.full`;
-    
+
     // Try to get the full story from templeDescriptions
     if (templeDescriptions[fullStoryKey]) {
       const story = templeDescriptions[fullStoryKey][language];
       if (story) return story;
     }
-    
+
     // Fallback to the temple description if no full story is available
     return temple.description;
   }, [temple, language]);
@@ -112,12 +112,12 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
     }
 
     // Get the text to speak in the current language
-    const textToSpeak = language === 'kn' 
+    const textToSpeak = language === 'kn'
       ? `${temple.name}. ${fullStory}. ಈ ದೇವಾಲಯವು ${temple.location} ನಲ್ಲಿ ನೆಲೆಸಿದೆ.`
       : `${temple.name}. ${fullStory}. This temple is located in ${temple.location}.`;
-    
+
     setIsSpeaking(true);
-    
+
     // Wait for voices to load
     const loadVoices = () => {
       return new Promise<SpeechSynthesisVoice[]>((resolve) => {
@@ -135,11 +135,11 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
 
     const voices = await loadVoices();
     console.log("Available voices:", voices.map(v => `${v.name} (${v.lang})`));
-    
+
     if (language === 'kn') {
       // Try to find Kannada voice (kn-IN)
       const kannadaVoice = voices.find(v => v.lang.includes('kn') || v.lang.includes('Kannada'));
-      
+
       if (kannadaVoice) {
         // Use native Kannada voice if available
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -148,28 +148,28 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
         utterance.pitch = 1.0;
         utterance.volume = 1.0;
         utterance.lang = 'kn-IN';
-        
+
         utterance.onend = () => {
           setIsSpeaking(false);
-          toast.success("✅ Kannada story completed!");
+          toast.success("Kannada story completed!");
         };
-        
+
         utterance.onerror = (e) => {
           console.error("Kannada TTS error:", e);
           setIsSpeaking(false);
-          toast.error("❌ Kannada TTS failed");
+          toast.error("Kannada TTS failed");
         };
-        
+
         window.speechSynthesis.speak(utterance);
-        toast.success("🎤 Playing in Kannada");
+        toast.success("Playing in Kannada");
       } else {
         // No Kannada voice available, try Hindi as alternative
         const hindiVoice = voices.find(v => v.lang.includes('hi-IN') || v.lang.includes('Hindi'));
         const tamilVoice = voices.find(v => v.lang.includes('ta-IN') || v.lang.includes('Tamil'));
-        
+
         // Prefer Hindi over Tamil for better pronunciation of Kannada
         const alternativeVoice = hindiVoice || tamilVoice;
-        
+
         if (alternativeVoice) {
           const utterance = new SpeechSynthesisUtterance(textToSpeak);
           utterance.voice = alternativeVoice;
@@ -177,22 +177,22 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
           utterance.pitch = 1.0;
           utterance.volume = 1.0;
           utterance.lang = alternativeVoice.lang;
-          
+
           utterance.onend = () => {
             setIsSpeaking(false);
           };
-          
+
           utterance.onerror = () => {
             setIsSpeaking(false);
-            toast.error("❌ TTS failed");
+            toast.error("TTS failed");
           };
-          
+
           window.speechSynthesis.speak(utterance);
-          toast.info(`🎤 Playing in ${alternativeVoice.name} (Kannada voice not available)`);
+          toast.info(`Playing in ${alternativeVoice.name} (Kannada voice not available)`);
         } else {
           // No Indian language voices available
           setIsSpeaking(false);
-          toast.warning("⚠️ Kannada text-to-speech is not available. Please install Kannada language support in your browser or Windows settings.");
+          toast.warning("Kannada text-to-speech is not available. Please install Kannada language support in your browser or Windows settings.");
         }
       }
     } else {
@@ -205,9 +205,9 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
       utterance.onend = () => setIsSpeaking(false);
       utterance.onerror = () => {
         setIsSpeaking(false);
-        toast.error("❌ TTS failed");
+        toast.error("TTS failed");
       };
-      
+
       window.speechSynthesis.speak(utterance);
       toast.success(translate("Playing temple story"));
     }
@@ -221,7 +221,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
     );
   };
 
-    const handleShare = () => {
+  const handleShare = () => {
     if (navigator.share) {
       navigator.share({
         title: temple.name,
@@ -232,7 +232,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
       navigator.clipboard.writeText(window.location.href);
       toast.success(translate("Link copied to clipboard!"));
     }
-  };  const handleSave = () => {
+  }; const handleSave = () => {
     toast.success(translate("Temple saved to your collection"));
   };
 
@@ -242,7 +242,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 animate-fade-in"
         onClick={onClose}
       />
-      
+
       <aside
         ref={panelRef}
         id={`detail-${temple.id}`}
@@ -267,7 +267,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
                 </Badge>
               </div>
             </div>
-            
+
             <Button
               variant="ghost"
               size="icon"
@@ -287,7 +287,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
               alt={temple.name}
               className="dp-main w-full h-64 md:h-80 object-cover"
             />
-            
+
             <div className="absolute inset-0 flex items-center justify-between p-4">
               <Button
                 variant="ghost"
@@ -297,7 +297,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
               >
                 <ChevronLeft className="h-6 w-6" />
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -312,9 +312,8 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
               {images.map((_, idx) => (
                 <button
                   key={idx}
-                  className={`h-2 rounded-full transition-all ${
-                    idx === currentImageIndex ? "w-8 bg-white" : "w-2 bg-white/50"
-                  }`}
+                  className={`h-2 rounded-full transition-all ${idx === currentImageIndex ? "w-8 bg-white" : "w-2 bg-white/50"
+                    }`}
                   onClick={() => setCurrentImageIndex(idx)}
                   aria-label={`View image ${idx + 1}`}
                 />
@@ -338,8 +337,8 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
                 </span>
               )}
             </Button>
-            
-            
+
+
             <Button
               className="btn-directions"
               variant="outline"
@@ -360,7 +359,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
               <Languages className="mr-2 h-4 w-4" />
               {language === 'en' ? 'ಕನ್ನಡ' : 'ಇಂಗ್ಲಿಷ್'}
             </Button>
-            
+
             <Button
               className="btn-save"
               variant="outline"
@@ -369,7 +368,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
             >
               <Bookmark className="h-4 w-4" />
             </Button>
-            
+
             <Button
               className="btn-share"
               variant="outline"
@@ -451,7 +450,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
                     <span className="text-primary text-sm">🚌</span>
                   </div>
                   <span className="text-sm text-muted-foreground">
-                    {language === 'kn' 
+                    {language === 'kn'
                       ? `ಈ ದೇವಾಲಯ ಜೂಬ್ಲೀ ಬಸ್ ಸ್ಟೇಷನ್ ನಿಂದ ${temple.travelInfo.fromJubileeBusStation}, ಷಾಮಿರ್ಪೇಟ ನಿಂದ ${temple.travelInfo.fromShamirpet}, ORR ಎಗ್ಜಿಟ್ ನಿಂದ ${temple.travelInfo.fromORRExit} ದೂರದಲ್ಲಿದೆ.`
                       : `This temple is around ${temple.travelInfo.fromJubileeBusStation} from Jubilee Bus Station, ${temple.travelInfo.fromShamirpet} from Shamirpet, ${temple.travelInfo.fromORRExit} from ORR Exit.`
                     }
@@ -554,7 +553,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
             </div>
           </div>
 
-              {nearbyTemples.length > 0 && (
+          {nearbyTemples.length > 0 && (
             <div>
               <h3 className="text-xl font-serif font-bold text-foreground mb-3">
                 {translate("Nearby Temples in")} {temple.region}

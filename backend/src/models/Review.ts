@@ -52,9 +52,9 @@ reviewSchema.index({ temple: 1, user: 1 }, { unique: true });
 reviewSchema.index({ temple: 1, createdAt: -1 });
 
 // Static method to calculate average rating
-reviewSchema.statics.calculateAverageRating = async function(templeId: mongoose.Types.ObjectId) {
+reviewSchema.statics.calculateAverageRating = async function (templeId: mongoose.Types.ObjectId) {
   const Temple = mongoose.model('Temple');
-  
+
   const stats = await this.aggregate([
     { $match: { temple: templeId } },
     {
@@ -80,12 +80,12 @@ reviewSchema.statics.calculateAverageRating = async function(templeId: mongoose.
 };
 
 // Update temple rating after save
-reviewSchema.post('save', async function() {
+reviewSchema.post('save', async function () {
   await (this.constructor as any).calculateAverageRating(this.temple);
 });
 
 // Update temple rating after remove
-reviewSchema.post('remove', async function() {
+reviewSchema.post('deleteOne', { document: true, query: false }, async function () {
   await (this.constructor as any).calculateAverageRating(this.temple);
 });
 

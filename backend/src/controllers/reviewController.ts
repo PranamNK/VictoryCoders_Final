@@ -116,7 +116,7 @@ export const updateReview = async (req: AuthRequest, res: Response) => {
     }
 
     // Make sure user owns the review
-    if (review.user.toString() !== user._id.toString()) {
+    if (review.user.toString() !== (user._id as any).toString()) {
       return res.status(401).json({
         success: false,
         message: 'Not authorized to update this review'
@@ -163,7 +163,7 @@ export const deleteReview = async (req: AuthRequest, res: Response) => {
     }
 
     // Make sure user owns the review or is admin
-    if (review.user.toString() !== user._id.toString() && user.role !== 'admin') {
+    if (review.user.toString() !== (user._id as any).toString() && user.role !== 'admin') {
       return res.status(401).json({
         success: false,
         message: 'Not authorized to delete this review'

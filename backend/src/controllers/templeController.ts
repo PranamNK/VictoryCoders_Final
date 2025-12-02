@@ -173,14 +173,14 @@ export const addToFavorites = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    if (user.favorites.includes(temple._id)) {
+    if (user.favorites.some((fav) => fav.toString() === (temple._id as any).toString())) {
       return res.status(400).json({
         success: false,
         message: 'Temple already in favorites'
       });
     }
 
-    user.favorites.push(temple._id);
+    user.favorites.push(temple._id as any);
     await user.save();
 
     res.status(200).json({
@@ -218,7 +218,7 @@ export const removeFromFavorites = async (req: AuthRequest, res: Response) => {
     }
 
     user.favorites = user.favorites.filter(
-      (fav) => fav.toString() !== temple._id.toString()
+      (fav) => fav.toString() !== (temple._id as any).toString()
     );
     await user.save();
 

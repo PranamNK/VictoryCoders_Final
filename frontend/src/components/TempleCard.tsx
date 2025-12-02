@@ -15,8 +15,10 @@ interface TempleCardProps {
 
 const TempleCard = ({ temple, index }: TempleCardProps) => {
   const { translate, language } = useLanguage();
-  // Alternate between two temple images for variety
-  const displayImage = index % 2 === 0 ? templeImage1 : templeImage2;
+  // Use temple image if available, otherwise alternate between two local images
+  const displayImage = temple.image && temple.image !== '/placeholder.svg'
+    ? temple.image
+    : (index % 2 === 0 ? templeImage1 : templeImage2);
 
   return (
     <Card className="group overflow-hidden border-border hover-lift temple-shadow bg-card">
@@ -27,7 +29,7 @@ const TempleCard = ({ temple, index }: TempleCardProps) => {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        
+
         {/* Region Badge */}
         <Badge className="absolute top-3 right-3 bg-primary/90 text-primary-foreground border-0">
           {translate(temple.region)}
@@ -75,7 +77,7 @@ const TempleCard = ({ temple, index }: TempleCardProps) => {
 
         <div>
           <Link to={`/temple/${temple.id}`} className="w-full">
-            <Button 
+            <Button
               variant="default"
               className="w-full bg-primary/90 hover:bg-primary text-primary-foreground font-medium"
             >

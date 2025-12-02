@@ -34,10 +34,10 @@ export interface Temple {
   shortDescription: string;
   image: string;
   region: "Mangalore" | "Udupi" | "Kundapura";
-  openingHours: OpeningHours[];
-  faqs: FAQ[];
-  events: Event[];
-  travelInfo: TravelInfo;
+  openingHours?: OpeningHours[];
+  faqs?: FAQ[];
+  events?: Event[];
+  travelInfo?: TravelInfo;
 }
 
 export const temples: Temple[] = [
@@ -48,7 +48,7 @@ export const temples: Temple[] = [
     deity: "Goddess Mangaladevi",
     shortDescription: "The presiding deity of Mangalore",
     description: "Ancient temple dedicated to Goddess Mangaladevi, the city's namesake deity. Known for its historical significance and unique architectural style.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Mangaladevi_Temple_Mangalore_2.jpg/1024px-Mangaladevi_Temple_Mangalore_2.jpg",
     region: "Mangalore",
     openingHours: [
       { day: "Monday", hours: "6:00 AM - 12:30 PM & 5:30 PM - 7:30 PM" },
@@ -94,7 +94,7 @@ export const temples: Temple[] = [
     ],
     travelInfo: {
       fromJubileeBusStation: "18 Kms",
-      fromShamirpet: "8 Kms", 
+      fromShamirpet: "8 Kms",
       fromORRExit: "22 Kms"
     }
   },
@@ -105,7 +105,7 @@ export const temples: Temple[] = [
     deity: "Lord Manjunatha (Shiva)",
     shortDescription: "Historic hill temple devoted to Lord Shiva",
     description: "A historic hill temple devoted to Lord Manjunatha (Shiva), featuring ancient bronze statues and panoramic views of Mangalore city.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Kadri_temple_entrance_mangalore.jpg/1024px-Kadri_temple_entrance_mangalore.jpg",
     region: "Mangalore"
   },
   {
@@ -115,7 +115,7 @@ export const temples: Temple[] = [
     deity: "Lord Gokarnanatheshwara",
     shortDescription: "Famous for grand Dasara celebrations",
     description: "Famous for its grand Dasara celebrations and modern architecture with stunning illumination, dedicated to Lord Gokarnanatheshwara.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Gokarnatheshwara_Temple_7042008.jpg/1024px-Gokarnatheshwara_Temple_7042008.jpg",
     region: "Mangalore"
   },
   {
@@ -125,7 +125,7 @@ export const temples: Temple[] = [
     deity: "Goddess Durga",
     shortDescription: "River-island temple known for Yakshagana",
     description: "River-island temple of Goddess Durga, known for Yakshagana performances and serene location on the Nandini river.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Kateel_Temple.jpg/1024px-Kateel_Temple.jpg",
     region: "Mangalore"
   },
   {
@@ -135,7 +135,7 @@ export const temples: Temple[] = [
     deity: "Goddess Rajarajeshwari",
     shortDescription: "Ancient temple with unique clay idol",
     description: "Ancient temple renowned for its clay idol of Goddess Rajarajeshwari and rich spiritual heritage spanning centuries.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Polali_Rajarajeshwari_Temple_%281%29.jpg/1024px-Polali_Rajarajeshwari_Temple_%281%29.jpg",
     region: "Mangalore"
   },
   {
@@ -145,7 +145,7 @@ export const temples: Temple[] = [
     deity: "Goddess Durga Parameshwari",
     shortDescription: "Coastal shrine of divine power",
     description: "Coastal shrine dedicated to Goddess Durga Parameshwari, known for its powerful spiritual energy and coastal location.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Ail_Sri_Durga_parameshwari_temple.jpg/1024px-Ail_Sri_Durga_parameshwari_temple.jpg",
     region: "Mangalore"
   },
   {
@@ -155,7 +155,7 @@ export const temples: Temple[] = [
     deity: "Lord Shiva",
     shortDescription: "Seaside Shiva temple with ocean views",
     description: "Seaside Shiva temple overlooking the Arabian Sea, offering breathtaking sunset views and peaceful spiritual atmosphere.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Someahwar_Temple_2%2C_Ullal_Mangalore.jpg/1024px-Someahwar_Temple_2%2C_Ullal_Mangalore.jpg",
     region: "Mangalore"
   },
   {
@@ -165,7 +165,7 @@ export const temples: Temple[] = [
     deity: "Lord Venkataramana",
     shortDescription: "Popular Vaishnava temple at city center",
     description: "Popular Vaishnava temple at the city's spiritual center, known for daily rituals and vibrant festivals.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shree_Venkataramana_Temple_2_.jpg/1024px-Shree_Venkataramana_Temple_2_.jpg",
     region: "Mangalore"
   },
   {
@@ -175,7 +175,7 @@ export const temples: Temple[] = [
     deity: "Lord Ananteshwara",
     shortDescription: "Part of Udupi's sacred triad",
     description: "Ancient temple dedicated to Lord Ananteshwara, part of Udupi's sacred triad of temples with rich historical significance.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Shri_Anantheswara_temple%2C_Udupi.jpg/1024px-Shri_Anantheswara_temple%2C_Udupi.jpg",
     region: "Udupi"
   },
   {
@@ -185,7 +185,7 @@ export const temples: Temple[] = [
     deity: "Goddess Mahakali",
     shortDescription: "Twin shrines of power and protection",
     description: "Twin shrines of Goddess Mahakali and Lord Janardhana, known for powerful spiritual presence and traditional rituals.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Ambalapadi_Temple_02.jpg/1024px-Ambalapadi_Temple_02.jpg",
     region: "Udupi"
   },
   {
@@ -195,7 +195,7 @@ export const temples: Temple[] = [
     deity: "Lord Ganesha",
     shortDescription: "Cave temple with self-manifested Ganesha",
     description: "Cave temple featuring self-manifested Ganesha idol, nestled in natural rock formations with mystical atmosphere.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_-_Wheel_-_Odisha.jpg/1024px-Konark_Sun_Temple_-_Wheel_-_Odisha.jpg",
     region: "Kundapura"
   },
   {
@@ -205,7 +205,7 @@ export const temples: Temple[] = [
     deity: "Lord Ganesha",
     shortDescription: "Revered wish-fulfilling shrine",
     description: "Revered wish-fulfilling shrine to Lord Ganesha, attracting devotees from across the region for blessings.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Anegudde.jpg/1024px-Anegudde.jpg",
     region: "Udupi"
   },
   {
@@ -215,7 +215,7 @@ export const temples: Temple[] = [
     deity: "Lord Shiva",
     shortDescription: "Peaceful Shiva temple in nature",
     description: "Dedicated to Lord Shiva, set amidst lush greenery offering tranquil atmosphere for meditation and worship.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/SHREE_BRAHMALINGESHWARA_TEMPLE.jpg/1024px-SHREE_BRAHMALINGESHWARA_TEMPLE.jpg",
     region: "Kundapura"
   },
   {
@@ -225,7 +225,7 @@ export const temples: Temple[] = [
     deity: "Goddess Durga",
     shortDescription: "Temple of five Durgas with ancient legends",
     description: "Temple of five Durgas, steeped in legend and known for powerful spiritual energy and ancient traditions.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Indrani_Temple_at_Indrali_Udupi.JPG/1024px-Indrani_Temple_at_Indrali_Udupi.JPG",
     region: "Udupi"
   },
   {
@@ -235,7 +235,7 @@ export const temples: Temple[] = [
     deity: "Lord Shiva",
     shortDescription: "Known for moonlight poojas",
     description: "Shiva temple known for moonlight poojas and serene evening rituals, offering unique spiritual experience.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Sri_Chandramouleeswara_Temple_Udupi.JPG/1024px-Sri_Chandramouleeswara_Temple_Udupi.JPG",
     region: "Udupi"
   },
   {
@@ -245,7 +245,7 @@ export const temples: Temple[] = [
     deity: "Lord Venkatesha",
     shortDescription: "Vaishnava temple for deep devotion",
     description: "Vaishnava temple known for deep devotion and cultural events, preserving ancient Bhakti traditions.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_-_Wheel_-_Odisha.jpg/1024px-Konark_Sun_Temple_-_Wheel_-_Odisha.jpg",
     region: "Udupi"
   },
   {
@@ -255,7 +255,7 @@ export const temples: Temple[] = [
     deity: "Lord Shiva",
     shortDescription: "Known for healing powers",
     description: "Known for its healing powers and picturesque setting, attracting devotees seeking spiritual and physical wellness.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_-_Wheel_-_Odisha.jpg/1024px-Konark_Sun_Temple_-_Wheel_-_Odisha.jpg",
     region: "Udupi"
   },
   {
@@ -265,7 +265,7 @@ export const temples: Temple[] = [
     deity: "Lord Shiva",
     shortDescription: "Ancient temple in serene forests",
     description: "Ancient Shiva temple nestled in serene forests, offering peaceful retreat for spiritual seekers.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Gude_Mahalingeshwara_Devaru.jpg/1024px-Gude_Mahalingeshwara_Devaru.jpg",
     region: "Udupi"
   },
   {
@@ -275,7 +275,7 @@ export const temples: Temple[] = [
     deity: "Goddess Durga",
     shortDescription: "Symbol of divine protection",
     description: "Powerful shrine of Goddess Durga as Mahisha Mardini, symbol of protection and victory over evil.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Kadiyali_Shree_Mahishamardini_Devasthana_%281%29.jpg/1024px-Kadiyali_Shree_Mahishamardini_Devasthana_%281%29.jpg",
     region: "Udupi"
   },
   {
@@ -285,7 +285,7 @@ export const temples: Temple[] = [
     deity: "Goddess Durga",
     shortDescription: "Fierce yet compassionate deity",
     description: "Temple honoring the fierce yet compassionate Goddess Durga, known for powerful spiritual atmosphere.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Indrani_Temple_at_Indrali_Udupi.JPG/1024px-Indrani_Temple_at_Indrali_Udupi.JPG",
     region: "Udupi"
   },
   {
@@ -295,7 +295,7 @@ export const temples: Temple[] = [
     deity: "Lord Vishnu",
     shortDescription: "Ancient Vishnu temple with Dravidian style",
     description: "Ancient Vishnu temple with Dravidian architecture, featuring exquisite carvings and traditional rituals.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_-_Wheel_-_Odisha.jpg/1024px-Konark_Sun_Temple_-_Wheel_-_Odisha.jpg",
     region: "Udupi"
   },
   {
@@ -305,7 +305,7 @@ export const temples: Temple[] = [
     deity: "Lord Krishna",
     shortDescription: "Krishna temple for youth devotion",
     description: "Krishna temple known for serene rituals and youth devotion, popular among students and families.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Venugopala_swamy_temple_front.jpg/1024px-Venugopala_swamy_temple_front.jpg",
     region: "Udupi"
   },
   {
@@ -315,7 +315,7 @@ export const temples: Temple[] = [
     deity: "Lord Venkataramana",
     shortDescription: "Historic temple near Car Street",
     description: "Historic temple near the Car Street cluster, maintaining ancient Vaishnava traditions and rituals.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Sri_Venkataraman_Temple_Udupi.jpg/1024px-Sri_Venkataraman_Temple_Udupi.jpg",
     region: "Udupi"
   },
   {
@@ -325,7 +325,7 @@ export const temples: Temple[] = [
     deity: "Lord Balarama",
     shortDescription: "Coastal temple honoring Balarama",
     description: "Coastal temple honoring Lord Balarama, offering peaceful seaside atmosphere and traditional worship.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_-_Wheel_-_Odisha.jpg/1024px-Konark_Sun_Temple_-_Wheel_-_Odisha.jpg",
     region: "Udupi"
   },
   {
@@ -335,7 +335,7 @@ export const temples: Temple[] = [
     deity: "Lord Padmanabha",
     shortDescription: "Ancient temple with Brahmin heritage",
     description: "Ancient temple with deep Shivalli Brahmin roots, preserving centuries-old traditions and rituals.",
-    image: "/placeholder.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_-_Wheel_-_Odisha.jpg/1024px-Konark_Sun_Temple_-_Wheel_-_Odisha.jpg",
     region: "Udupi"
   }
 ];

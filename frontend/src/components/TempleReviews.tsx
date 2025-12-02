@@ -60,10 +60,11 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
         title: 'Review submitted!',
         description: 'Thank you for sharing your experience',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Please try again';
       toast({
         title: 'Failed to submit review',
-        description: error.message || 'Please try again',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -79,10 +80,11 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
         title: 'Review deleted',
         description: 'Your review has been removed',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Please try again';
       toast({
         title: 'Failed to delete review',
-        description: error.message || 'Please try again',
+        description: errorMessage,
         variant: 'destructive',
       });
     }
@@ -99,9 +101,8 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
           disabled={!onChange}
         >
           <Star
-            className={`h-5 w-5 ${
-              star <= value ? 'fill-yellow-500 text-yellow-500' : 'text-gray-300'
-            }`}
+            className={`h-5 w-5 ${star <= value ? 'fill-yellow-500 text-yellow-500' : 'text-gray-300'
+              }`}
           />
         </button>
       ))}

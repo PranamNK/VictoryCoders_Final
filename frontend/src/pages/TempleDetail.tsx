@@ -30,18 +30,18 @@ const TempleDetail = () => {
   // Memoize the full story to prevent recalculation on every render
   const fullStory = useMemo(() => {
     if (!temple) return '';
-    
+
     // Map temple ID to description key
-    let baseId = temple.id.replace('-temple', '').replace('-shri-', '').replace('shri-', '');
+    const baseId = temple.id.replace('-temple', '').replace('-shri-', '').replace('shri-', '');
     const firstWord = baseId.split('-')[0];
     const descriptionKey = `temple.${firstWord}`;
     const fullStoryKey = `${descriptionKey}.full`;
-    
+
     if (templeDescriptions[fullStoryKey]) {
       const story = templeDescriptions[fullStoryKey][language];
       if (story) return story;
     }
-    
+
     return temple.description;
   }, [temple, language]);
 
@@ -59,7 +59,9 @@ const TempleDetail = () => {
   }
 
   const templeIndex = temples.findIndex((t) => t.id === id);
-  const displayImage = templeIndex % 2 === 0 ? templeImage1 : templeImage2;
+  const displayImage = temple.image && temple.image !== '/placeholder.svg'
+    ? temple.image
+    : (templeIndex % 2 === 0 ? templeImage1 : templeImage2);
 
   const nearbyTemples = temples
     .filter((t) => t.region === temple.region && t.id !== temple.id)
@@ -100,7 +102,7 @@ const TempleDetail = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-        
+
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
             <Link to="/">
@@ -112,7 +114,7 @@ const TempleDetail = () => {
                 Back to Temples
               </Button>
             </Link>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-3 flex-wrap">
                 <Badge className="bg-primary text-primary-foreground border-0">
@@ -125,11 +127,11 @@ const TempleDetail = () => {
                   </span>
                 </div>
               </div>
-              
+
               <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white">
                 {temple.name}
               </h1>
-              
+
               <div className="flex items-center gap-2 text-white/90">
                 <MapPin className="h-5 w-5" />
                 <span className="text-lg">{temple.location}</span>
@@ -156,8 +158,8 @@ const TempleDetail = () => {
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
               </Button>
-              <FavoriteButton 
-                templeId={temple.id} 
+              <FavoriteButton
+                templeId={temple.id}
                 variant="outline"
                 size="default"
                 className="gap-2"

@@ -13,22 +13,22 @@ interface FavoriteButtonProps {
   className?: string;
 }
 
-const FavoriteButton = ({ 
-  templeId, 
-  variant = 'ghost', 
+const FavoriteButton = ({
+  templeId,
+  variant = 'ghost',
   size = 'icon',
-  className = '' 
+  className = ''
 }: FavoriteButtonProps) => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  
+
   const isFavorite = user?.favorites?.includes(templeId) || false;
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent parent click events
-    
+
     if (!isAuthenticated) {
       toast({
         title: 'Login required',
@@ -55,10 +55,11 @@ const FavoriteButton = ({
       }
       // Reload user data to update favorites
       window.location.reload(); // Simple reload for now, could be optimized with state management
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Please try again';
       toast({
         title: 'Failed to update favorites',
-        description: error.message || 'Please try again',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -75,9 +76,8 @@ const FavoriteButton = ({
       className={className}
     >
       <Heart
-        className={`h-5 w-5 transition-colors ${
-          isFavorite ? 'fill-red-500 text-red-500' : ''
-        }`}
+        className={`h-5 w-5 transition-colors ${isFavorite ? 'fill-red-500 text-red-500' : ''
+          }`}
       />
     </Button>
   );

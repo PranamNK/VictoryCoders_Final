@@ -11,19 +11,19 @@ const EducationSection = () => {
       id: 1,
       title: language === 'kn' ? 'ಕರಾವಳಿ ದೇವಾಲಯಗಳು' : 'Coastal Temples',
       description: language === 'kn' ? 'ಕರ್ನಾಟಕದ ಕರಾವಳಿ ದೇವಾಲಯ ಪರಂಪರೆ' : 'Coastal Karnataka temple heritage',
-      embedUrl: 'https://www.youtube.com/embed/IuuUdv6HzGE'
+      embedUrl: 'https://youtube.com/shorts/KVqN8RUD_4Y?si=gbDaj8Ox0oYYW5Jz'
     },
     {
       id: 2,
       title: language === 'kn' ? 'ದೇವಾಲಯ ದರ್ಶನ' : 'Temple Darshan',
       description: language === 'kn' ? 'ತುಳುನಾಡಿನ ದೇವಾಲಯ ದರ್ಶನ' : 'Temple visit and traditions of Tulunadu',
-      embedUrl: 'https://www.youtube.com/embed/GLliXEfR2BM'
+      embedUrl: 'https://youtube.com/shorts/qqgmhvDEthE?si=xwnWIETscvDWdWi-'
     },
     {
       id: 3,
       title: language === 'kn' ? 'ದೇವಾಲಯ ಸಂಪ್ರದಾಯಗಳು' : 'Temple Traditions',
       description: language === 'kn' ? 'ಪ್ರಾಚೀನ ದೇವಾಲಯ ಸಂಪ್ರದಾಯಗಳು ಮತ್ತು ಆಚರಣೆಗಳು' : 'Ancient temple traditions and practices',
-      embedUrl: 'https://www.youtube.com/embed/4bhg8L-RfCc'
+      embedUrl: 'https://youtube.com/shorts/-KkLRVa75eI?si=yRP7-nQ9kbdWPwBf'
     },
     {
       id: 4,

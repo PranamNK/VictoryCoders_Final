@@ -6,7 +6,7 @@ import { AuthRequest } from '../middleware/auth.js';
 // Generate JWT Token
 const generateToken = (id: string): string => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'default-secret', {
-    expiresIn: process.env.JWT_EXPIRE || '7d'
+    expiresIn: (process.env.JWT_EXPIRE || '7d') as any
   });
 };
 
@@ -35,13 +35,13 @@ export const register = async (req: Request, res: Response) => {
     });
 
     // Create token
-    const token = generateToken(user._id.toString());
+    const token = generateToken((user._id as any).toString());
 
     res.status(201).json({
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user._id as any,
         name: user.name,
         email: user.email,
         role: user.role
@@ -91,13 +91,13 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Create token
-    const token = generateToken(user._id.toString());
+    const token = generateToken((user._id as any).toString());
 
     res.status(200).json({
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user._id as any,
         name: user.name,
         email: user.email,
         role: user.role
