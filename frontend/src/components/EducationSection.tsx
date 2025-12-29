@@ -12,8 +12,8 @@ const EducationSection = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // Internal API Key - user does not need to provide this
-  const apiKey = "AIzaSyB4x-GUJF7njIDvvpgpX4sDMF62828uDvc";
+  // Internal API Key - now using environment variable
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
