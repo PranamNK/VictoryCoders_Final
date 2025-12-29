@@ -29,8 +29,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import { toast } from "sonner";
-import templeImage1 from "@/assets/temple-card-1.jpg";
-import templeImage2 from "@/assets/temple-card-2.jpg";
+import TempleReviews from "./TempleReviews";
 
 interface TempleDetailPanelProps {
   temple: Temple | null;
@@ -96,7 +95,7 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
 
   if (!temple) return null;
 
-  const images = [templeImage1, templeImage2];
+  const images = [temple.image];
   const currentImage = images[currentImageIndex];
 
   const handleTTS = async () => {
@@ -572,6 +571,13 @@ const TempleDetailPanel = ({ temple, onClose, nearbyTemples = [] }: TempleDetail
               </div>
             </div>
           )}
+
+          <div className="pt-6 border-t border-border">
+            <h3 className="text-xl font-serif font-bold text-foreground mb-6">
+              {translate("Reviews & Photos")}
+            </h3>
+            <TempleReviews templeId={temple.id} />
+          </div>
 
           <div className="text-xs text-muted-foreground pt-4 border-t border-border">
             <p>

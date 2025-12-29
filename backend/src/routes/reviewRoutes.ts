@@ -7,11 +7,13 @@ import {
 } from '../controllers/reviewController.js';
 import { protect } from '../middleware/auth.js';
 
+import upload from '../middleware/upload.js';
+
 const router = express.Router({ mergeParams: true });
 
 router.route('/')
   .get(getReviews)
-  .post(protect, createReview);
+  .post(protect, upload.array('images', 5), createReview);
 
 router.route('/:id')
   .put(protect, updateReview)

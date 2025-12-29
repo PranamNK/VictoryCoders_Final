@@ -17,6 +17,14 @@ export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide name, email, and password'
+      });
+    }
+
     // Check if user exists
     const userExists = await User.findOne({ email });
 
@@ -47,10 +55,11 @@ export const register = async (req: Request, res: Response) => {
         role: user.role
       }
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Register error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error during registration'
     });
   }
 };
@@ -103,10 +112,11 @@ export const login = async (req: Request, res: Response) => {
         role: user.role
       }
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Login error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error during login'
     });
   }
 };
@@ -122,10 +132,11 @@ export const getMe = async (req: AuthRequest, res: Response) => {
       success: true,
       data: user
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Get user error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };

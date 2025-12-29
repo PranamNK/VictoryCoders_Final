@@ -19,6 +19,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const isCalendarPage = location.pathname === '/calendar';
   const { language, toggleLanguage, translate } = useLanguage();
   const { user, logout, isAuthenticated } = useAuth();
 
@@ -50,22 +51,23 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
           ? "bg-background/98 backdrop-blur-md shadow-sm"
-          : "bg-black/40 backdrop-blur-sm"
-      }`}
+          : isCalendarPage
+            ? "bg-[hsl(var(--saffron-gold))] shadow-md mandala-watermark"  // Saffron Gold for Calendar
+            : "bg-black/40 backdrop-blur-sm"
+        }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-11 h-11 bg-primary rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-primary-foreground font-serif text-2xl font-bold">
+            <div className={`w-11 h-11 rounded-full flex items-center justify-center shadow-lg ${isCalendarPage ? 'bg-[hsl(var(--deep-coffee))]' : 'bg-primary'}`}>
+              <span className={`font-serif text-2xl font-bold ${isCalendarPage ? 'text-[hsl(var(--saffron-gold))]' : 'text-primary-foreground'}`}>
                 ॐ
               </span>
             </div>
-            <span className={`font-serif text-2xl font-bold tracking-tight ${isScrolled ? 'text-foreground' : 'text-white'}`}>
+            <span className={`font-serif text-2xl font-bold tracking-tight ${isScrolled ? 'text-foreground' : isCalendarPage ? 'text-[hsl(var(--deep-coffee))]' : 'text-white'}`}>
               TempleVerse
             </span>
           </Link>
@@ -76,13 +78,14 @@ const Header = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-4 py-2 rounded-lg transition-smooth font-medium ${
-                  isActive(link.path)
-                    ? "bg-primary/20 text-primary"
-                    : isScrolled 
+                className={`px-4 py-2 rounded-lg transition-smooth font-medium ${isActive(link.path)
+                    ? isCalendarPage ? "bg-[hsl(var(--deep-coffee))/10] text-[hsl(var(--deep-coffee))]" : "bg-primary/20 text-primary"
+                    : isScrolled
                       ? "text-muted-foreground hover:text-foreground hover:bg-muted"
-                      : "text-white/90 hover:text-white hover:bg-white/10"
-                }`}
+                      : isCalendarPage
+                        ? "text-[hsl(var(--deep-coffee))/80] hover:text-[hsl(var(--deep-coffee))] hover:bg-[hsl(var(--deep-coffee))/10]"
+                        : "text-white/90 hover:text-white hover:bg-white/10"
+                  }`}
               >
                 {translate(link.name)}
               </Link>
@@ -91,30 +94,30 @@ const Header = () => {
 
           {/* Search, Language Toggle and Auth (Desktop) */}
           <div className="hidden md:flex items-center space-x-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className={`hover:bg-primary/10 ${isScrolled ? '' : 'text-white hover:bg-white/10'}`}
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`hover:bg-primary/10 ${isScrolled ? '' : isCalendarPage ? 'text-[hsl(var(--deep-coffee))] hover:bg-[hsl(var(--deep-coffee))/10]' : 'text-white hover:bg-white/10'}`}
             >
               <Search className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className={`flex items-center gap-2 hover:bg-primary/10 ${isScrolled ? '' : 'text-white hover:bg-white/10'}`}
+              className={`flex items-center gap-2 hover:bg-primary/10 ${isScrolled ? '' : isCalendarPage ? 'text-[hsl(var(--deep-coffee))] hover:bg-[hsl(var(--deep-coffee))/10]' : 'text-white hover:bg-white/10'}`}
               onClick={toggleLanguage}
             >
               <Languages className="h-4 w-4" />
               <span className="font-medium">{language === 'en' ? 'ENG' : 'ಕನ್ನಡ'}</span>
             </Button>
-            
+
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="sm"
-                    className={`flex items-center gap-2 hover:bg-primary/10 ${isScrolled ? '' : 'text-white hover:bg-white/10'}`}
+                    className={`flex items-center gap-2 hover:bg-primary/10 ${isScrolled ? '' : isCalendarPage ? 'text-[hsl(var(--deep-coffee))] hover:bg-[hsl(var(--deep-coffee))/10]' : 'text-white hover:bg-white/10'}`}
                   >
                     <User className="h-4 w-4" />
                     <span className="font-medium">{user?.name}</span>
@@ -144,7 +147,7 @@ const Header = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate('/login')}
-                  className={`${isScrolled ? '' : 'text-white hover:bg-white/10'}`}
+                  className={`${isScrolled ? '' : isCalendarPage ? 'text-[hsl(var(--deep-coffee))] hover:bg-[hsl(var(--deep-coffee))/10]' : 'text-white hover:bg-white/10'}`}
                 >
                   Login
                 </Button>
@@ -162,11 +165,12 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`md:hidden p-2 rounded-lg transition-smooth ${
-              isScrolled 
-                ? 'text-foreground hover:bg-muted' 
-                : 'text-white hover:bg-white/10'
-            }`}
+            className={`md:hidden p-2 rounded-lg transition-smooth ${isScrolled
+                ? 'text-foreground hover:bg-muted'
+                : isCalendarPage
+                  ? 'text-[hsl(var(--deep-coffee))] hover:bg-[hsl(var(--deep-coffee))/10]'
+                  : 'text-white hover:bg-white/10'
+              }`}
           >
             {isMobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -186,11 +190,10 @@ const Header = () => {
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg transition-smooth font-medium ${
-                  isActive(link.path)
+                className={`block px-4 py-3 rounded-lg transition-smooth font-medium ${isActive(link.path)
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+                  }`}
               >
                 {translate(link.name)}
               </Link>
@@ -212,7 +215,7 @@ const Header = () => {
                 <Languages className="h-4 w-4" />
                 <span>{language === 'en' ? 'Switch to ಕನ್ನಡ' : 'Switch to English'}</span>
               </Button>
-              
+
               {isAuthenticated ? (
                 <>
                   <Button

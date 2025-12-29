@@ -1,148 +1,177 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { ChevronDown } from "lucide-react";
+import { Send, Sparkles, Loader2, User, Bot } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { chatAPI, ChatMessage } from "@/lib/api";
+import { toast } from "sonner";
 
 const EducationSection = () => {
   const { language } = useLanguage();
-  const [currentVideo, setCurrentVideo] = useState(0);
-
-  const videos = [
-    {
-      id: 1,
-      title: language === 'kn' ? 'ಕರಾವಳಿ ದೇವಾಲಯಗಳು' : 'Coastal Temples',
-      description: language === 'kn' ? 'ಕರ್ನಾಟಕದ ಕರಾವಳಿ ದೇವಾಲಯ ಪರಂಪರೆ' : 'Coastal Karnataka temple heritage',
-      embedUrl: 'https://youtube.com/shorts/KVqN8RUD_4Y?si=gbDaj8Ox0oYYW5Jz'
-    },
-    {
-      id: 2,
-      title: language === 'kn' ? 'ದೇವಾಲಯ ದರ್ಶನ' : 'Temple Darshan',
-      description: language === 'kn' ? 'ತುಳುನಾಡಿನ ದೇವಾಲಯ ದರ್ಶನ' : 'Temple visit and traditions of Tulunadu',
-      embedUrl: 'https://youtube.com/shorts/qqgmhvDEthE?si=xwnWIETscvDWdWi-'
-    },
-    {
-      id: 3,
-      title: language === 'kn' ? 'ದೇವಾಲಯ ಸಂಪ್ರದಾಯಗಳು' : 'Temple Traditions',
-      description: language === 'kn' ? 'ಪ್ರಾಚೀನ ದೇವಾಲಯ ಸಂಪ್ರದಾಯಗಳು ಮತ್ತು ಆಚರಣೆಗಳು' : 'Ancient temple traditions and practices',
-      embedUrl: 'https://youtube.com/shorts/-KkLRVa75eI?si=yRP7-nQ9kbdWPwBf'
-    },
-    {
-      id: 4,
-      title: language === 'kn' ? 'ಪವಿತ್ರ ಸ್ಥಳಗಳು' : 'Sacred Places',
-      description: language === 'kn' ? 'ತುಳುನಾಡಿನ ಪವಿತ್ರ ದೇವಾಲಯ ಸ್ಥಳಗಳು' : 'Sacred temple sites of Tulunadu',
-      embedUrl: 'https://www.youtube.com/embed/BwgsjiWiYII'
-    }
-  ];
-
-  const handleScroll = () => {
-    const container = document.getElementById('shorts-container');
-    if (container) {
-      const scrollPosition = container.scrollTop;
-      const videoHeight = container.clientHeight;
-      const newIndex = Math.round(scrollPosition / videoHeight);
-      if (newIndex !== currentVideo && newIndex < videos.length) {
-        setCurrentVideo(newIndex);
-      }
-    }
-  };
-
-  const scrollToNext = () => {
-    const container = document.getElementById('shorts-container');
-    if (container && currentVideo < videos.length - 1) {
-      container.scrollTo({
-        top: (currentVideo + 1) * container.clientHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  // Internal API Key - user does not need to provide this
+  const apiKey = "AIzaSyB4x-GUJF7njIDvvpgpX4sDMF62828uDvc";
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const container = document.getElementById('shorts-container');
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [currentVideo]);
+  }, [messages]);
+
+  const handleSendMessage = async () => {
+    if (!inputValue.trim()) return;
+
+    const newMessage: ChatMessage = { role: 'user', text: inputValue };
+    setMessages(prev => [...prev, newMessage]);
+    setInputValue("");
+    setIsLoading(true);
+
+    try {
+      const responseText = await chatAPI.sendMessage(newMessage.text, apiKey);
+
+      const aiResponse: ChatMessage = { role: 'model', text: responseText };
+      setMessages(prev => [...prev, aiResponse]);
+    } catch (error: any) {
+      console.error(error);
+      const errorMessage = error.message || "I apologize, but I'm having trouble connecting to the spirits of knowledge right now.";
+      toast.error("Guide connection issue.");
+      setMessages(prev => [...prev, {
+        role: 'model',
+        text: errorMessage
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const suggestions = [
+    "Tell me about Udupi Krishna Matha",
+    "What is the significance of Yakshagana?",
+    "Explain the history of Mangaloreadevi Temple",
+    "When is the next Paryaya festival?"
+  ];
 
   return (
-    <section className="h-screen w-full bg-black overflow-hidden">
-      {/* Header */}
-      <div className="absolute top-20 left-0 right-0 z-50 text-center px-4 py-4 bg-gradient-to-b from-black/80 to-transparent">
-        <h2 className="font-serif text-2xl md:text-3xl font-bold text-white">
-          {language === 'kn' ? 'ಶಿಕ್ಷಣ' : 'Temple Shorts'}
-        </h2>
-        <p className="text-sm text-white/80 mt-1">
-          {language === 'kn' ? 'ಸ್ಕ್ರಾಲ್ ಮಾಡಿ' : 'Scroll to watch more'}
-        </p>
+    <section className="min-h-[calc(100vh-80px)] w-full bg-[#fdfcf8] relative overflow-hidden flex flex-col items-center justify-center p-4">
+      {/* Background Texture & Mandalas - Reusing styles from other pages */}
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-[#DAA520] blur-[150px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-[#3D2616] blur-[150px]" />
       </div>
 
-      {/* Shorts Container */}
-      <div 
-        id="shorts-container"
-        className="h-full w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        <style>{`
-          #shorts-container::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
+      <div className="z-10 w-full max-w-4xl flex flex-col h-[85vh] shadow-2xl rounded-2xl overflow-hidden border border-[#DAA520]/30 bg-white/80 backdrop-blur-md">
+        {/* Header */}
+        <div className="bg-[#3D2616] text-[#F9F5EA] p-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-[#DAA520]/20 p-2 rounded-full">
+              <Sparkles className="h-6 w-6 text-[#DAA520]" />
+            </div>
+            <div>
+              <h2 className="font-serif text-2xl font-bold">TempleVerse Guide</h2>
+              <p className="text-xs text-[#F9F5EA]/70">Powered by Gemini AI • Ask about Culture & Heritage</p>
+            </div>
+          </div>
+        </div>
 
-        {videos.map((video, index) => (
-          <div 
-            key={video.id}
-            className="h-screen w-full snap-start snap-always relative flex items-center justify-center"
-          >
-            {/* Video Container */}
-            <div className="relative w-full h-full max-w-md mx-auto bg-black">
-              <iframe
-                src={video.embedUrl}
-                title={video.title}
-                className="absolute inset-0 w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-
-              {/* Video Info Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
-                <h3 className="font-serif text-xl md:text-2xl font-bold text-white mb-2">
-                  {video.title}
+        {/* Chat Area */}
+        <ScrollArea className="flex-1 p-6 bg-[url('/textures/paper.png')] bg-repeat" ref={scrollRef}>
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center space-y-8 mt-10">
+              <div className="bg-[#DAA520]/10 p-6 rounded-full">
+                <Bot className="h-12 w-12 text-[#3D2616]" />
+              </div>
+              <div>
+                <h3 className="font-serif text-2xl text-[#3D2616] font-bold mb-2">
+                  Namaste! How can I enlighten you today?
                 </h3>
-                <p className="text-white/90 text-sm">
-                  {video.description}
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  I am trained on the sacred history of Tulunadu temples. Ask me about deities, rituals, architecture, or legends.
                 </p>
-                
-                {/* Video Counter */}
-                <div className="mt-3 text-white/70 text-xs">
-                  {index + 1} / {videos.length}
-                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setInputValue(s)}
+                    className="p-4 rounded-xl border border-[#DAA520]/30 bg-white hover:bg-[#F9F5EA] hover:border-[#DAA520] transition-all text-left text-sm text-[#3D2616] shadow-sm hover:shadow-md"
+                  >
+                    {s}
+                  </button>
+                ))}
               </div>
             </div>
+          ) : (
+            <div className="space-y-6">
+              {messages.map((m, index) => (
+                <div
+                  key={index}
+                  className={`flex w-full ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`flex gap-3 max-w-[80%] ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                    {/* Avatar */}
+                    <div className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${m.role === 'user' ? 'bg-[#3D2616]' : 'bg-[#DAA520]'
+                      }`}>
+                      {m.role === 'user' ? <User className="h-4 w-4 text-white" /> : <Bot className="h-4 w-4 text-white" />}
+                    </div>
 
-            {/* Scroll Indicator */}
-            {index < videos.length - 1 && (
-              <button
-                onClick={scrollToNext}
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 text-white/60 hover:text-white transition-colors animate-bounce"
-              >
-                <ChevronDown className="h-8 w-8" />
-              </button>
-            )}
+                    {/* Bubble */}
+                    <div className={`p-4 rounded-2xl shadow-sm text-sm leading-relaxed ${m.role === 'user'
+                      ? 'bg-[#3D2616] text-white rounded-tr-none'
+                      : 'bg-white border border-[#DAA520]/20 text-[#3D2616] rounded-tl-none'
+                      }`}>
+                      {m.text}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start w-full">
+                  <div className="flex gap-3 max-w-[80%]">
+                    <div className="h-8 w-8 rounded-full bg-[#DAA520] flex items-center justify-center flex-shrink-0">
+                      <Bot className="h-4 w-4 text-white" />
+                    </div>
+                    <div className="bg-white border border-[#DAA520]/20 p-4 rounded-2xl rounded-tl-none shadow-sm flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin text-[#DAA520]" />
+                      <span className="text-xs text-muted-foreground">Consulting the scriptures...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {/* Invisible element to scroll to */}
+              <div ref={scrollRef} />
+            </div>
+          )}
+        </ScrollArea>
+
+        {/* Input Area */}
+        <div className="p-4 bg-white border-t border-[#DAA520]/20">
+          <form
+            onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
+            className="flex gap-3 max-w-3xl mx-auto relative"
+          >
+            <Input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Ask about a temple..."
+              className="pr-12 py-6 bg-[#F9F5EA] border-[#DAA520]/30 focus-visible:ring-[#DAA520] text-base"
+            />
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="absolute right-1 top-1 bottom-1 bg-[#3D2616] hover:bg-[#2A1A0F] text-white rounded-lg px-4"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+          <div className="text-center mt-2">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Victory Coders • Hackathon 2025</span>
           </div>
-        ))}
-      </div>
-
-      {/* Side Navigation Dots */}
-      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50 space-y-3">
-        {videos.map((_, index) => (
-          <div
-            key={index}
-            className={`w-2 h-2 rounded-full transition-all ${
-              currentVideo === index 
-                ? 'bg-white h-8' 
-                : 'bg-white/50'
-            }`}
-          />
-        ))}
+        </div>
       </div>
     </section>
   );

@@ -28,7 +28,7 @@ const TempleListView = ({ temples, selectedTemple, onTempleSelect }: TempleListV
 
   const handleShare = (temple: Temple, e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (navigator.share) {
       navigator.share({
         title: temple.name,
@@ -53,7 +53,9 @@ const TempleListView = ({ temples, selectedTemple, onTempleSelect }: TempleListV
       </div>
 
       {temples.map((temple, index) => {
-        const displayImage = index % 2 === 0 ? templeImage1 : templeImage2;
+        const displayImage = temple.image && temple.image !== '/placeholder.svg'
+          ? temple.image
+          : (index % 2 === 0 ? templeImage1 : templeImage2);
         const isSelected = selectedTemple?.id === temple.id;
 
         return (
@@ -62,9 +64,8 @@ const TempleListView = ({ temples, selectedTemple, onTempleSelect }: TempleListV
             ref={(el) => {
               if (el) cardRefs.current[temple.id] = el;
             }}
-            className={`temple-card bg-card rounded-[var(--radius)] overflow-hidden transition-all duration-200 cursor-pointer card-shadow hover-lift ${
-              isSelected ? "border-l-4 border-l-primary ring-2 ring-primary/20" : "hover-accent-border"
-            }`}
+            className={`temple-card bg-card rounded-[var(--radius)] overflow-hidden transition-all duration-200 cursor-pointer card-shadow hover-lift ${isSelected ? "border-l-4 border-l-primary ring-2 ring-primary/20" : "hover-accent-border"
+              }`}
             onClick={() => onTempleSelect(temple)}
             data-slug={temple.id}
             tabIndex={0}
@@ -82,20 +83,20 @@ const TempleListView = ({ temples, selectedTemple, onTempleSelect }: TempleListV
                 alt={temple.name}
                 loading="lazy"
               />
-              
+
               <div className="tc-body flex-1 p-4 space-y-2">
                 <h3 className="tc-title text-lg font-serif font-bold text-foreground line-clamp-2">
                   {temple.name}
                 </h3>
-                
+
                 <p className="tc-meta text-sm text-muted-foreground">
                   {temple.location} • {temple.deity}
                 </p>
-                
+
                 <p className="tc-snippet text-sm text-foreground/80 line-clamp-2">
                   {temple.shortDescription}
                 </p>
-                
+
                 <div className="tc-actions flex gap-2 pt-2">
                   <Button
                     size="sm"
@@ -108,7 +109,7 @@ const TempleListView = ({ temples, selectedTemple, onTempleSelect }: TempleListV
                   >
                     View details
                   </Button>
-                  
+
                   <Button
                     size="sm"
                     variant="outline"

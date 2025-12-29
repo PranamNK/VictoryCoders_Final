@@ -7,6 +7,7 @@ export interface IReview extends Document {
   comment: string;
   visitDate?: Date;
   helpful: number;
+  images: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,6 +41,10 @@ const reviewSchema = new Schema<IReview>(
     helpful: {
       type: Number,
       default: 0
+    },
+    images: {
+      type: [String],
+      default: []
     }
   },
   {

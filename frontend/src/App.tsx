@@ -46,7 +46,7 @@ const App = () => (
               <Route
                 path="/add-temple"
                 element={
-                  <ProtectedRoute requireAdmin>
+                  <ProtectedRoute>
                     <AddTemplePage />
                   </ProtectedRoute>
                 }

@@ -39,10 +39,11 @@ export const getTemples = async (req: Request, res: Response) => {
       count: temples.length,
       data: temples
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Get temples error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -65,10 +66,11 @@ export const getTemple = async (req: Request, res: Response) => {
       success: true,
       data: temple
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Get temple error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -78,16 +80,30 @@ export const getTemple = async (req: Request, res: Response) => {
 // @access  Private/Admin
 export const createTemple = async (req: Request, res: Response) => {
   try {
+    // Validate required fields
+    if (!req.body.name || !req.body.location || !req.body.deity || !req.body.region) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields: name, location, deity, region'
+      });
+    }
+
+    // Add image if uploaded
+    if (req.file) {
+      req.body.image = `/uploads/${req.file.filename}`;
+    }
+
     const temple = await Temple.create(req.body);
 
     res.status(201).json({
       success: true,
       data: temple
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Create temple error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -97,6 +113,11 @@ export const createTemple = async (req: Request, res: Response) => {
 // @access  Private/Admin
 export const updateTemple = async (req: Request, res: Response) => {
   try {
+    // Add image if uploaded
+    if (req.file) {
+      req.body.image = `/uploads/${req.file.filename}`;
+    }
+
     const temple = await Temple.findOneAndUpdate(
       { id: req.params.id },
       req.body,
@@ -117,10 +138,11 @@ export const updateTemple = async (req: Request, res: Response) => {
       success: true,
       data: temple
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Update temple error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -143,10 +165,11 @@ export const deleteTemple = async (req: Request, res: Response) => {
       success: true,
       data: {}
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Delete temple error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -187,10 +210,11 @@ export const addToFavorites = async (req: AuthRequest, res: Response) => {
       success: true,
       data: user.favorites
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Add to favorites error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -226,10 +250,11 @@ export const removeFromFavorites = async (req: AuthRequest, res: Response) => {
       success: true,
       data: user.favorites
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Remove from favorites error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };

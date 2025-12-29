@@ -131,11 +131,15 @@ export const reviewAPI = {
     return res.json();
   },
 
-  create: async (templeId: string, rating: number, comment: string, visitDate?: string): Promise<{ success: boolean; data: Review }> => {
+  create: async (templeId: string, formData: FormData): Promise<{ success: boolean; data: Review }> => {
+    // Remove Content-Type header to let browser set boundary for FormData
+    const headers = getAuthHeaders();
+    delete (headers as any)['Content-Type'];
+
     const res = await fetch(`${API_URL}/temples/${templeId}/reviews`, {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ rating, comment, visitDate }),
+      headers,
+      body: formData,
     });
     if (!res.ok) {
       const error = await res.json();
@@ -162,4 +166,62 @@ export const reviewAPI = {
     if (!res.ok) throw new Error('Failed to delete review');
     return res.json();
   },
+};
+
+// Chat API for Gemini
+export interface ChatMessage {
+  role: 'user' | 'model';
+  text: string;
+}
+
+export const chatAPI = {
+  sendMessage: async (message: string, apiKey: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: 'user',
+                parts: [
+                  {
+                    text: `You are a knowledgeable cultural guide for TempleVerse, a platform dedicated to the coastal temples (Tulunadu) of Karnataka, India. 
+                    Your expertise includes the architecture (Gajaprishta, Kerala style), rituals (Bhuta Kola, Yakshagana), deities (Krishna, Shiva, Durga), and festivals (Paryaya, Dasara).
+                    Answer questions about these topics with respect, accuracy, and a touch of reverence. 
+                    If the user asks about something unrelated, politely steer them back to Indian heritage and temples.
+                    
+                    User Query: ${message}`
+                  }
+                ]
+              }
+            ]
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        console.error('Gemini API Error:', response.status, errorBody);
+
+        if (response.status === 429) {
+          throw new Error("The spirits are momentarily taken aback (Rate Limit). Please wait a moment and try again.");
+        }
+
+        throw new Error(`Failed to fetch response from Gemini: ${response.status} ${errorBody}`);
+      }
+
+      const data = await response.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, I couldn't interpret that response.";
+      return text;
+    } catch (error: any) {
+      console.error('Gemini API Conversation Error:', error);
+      // Pass the specific error message back to the UI
+      throw new Error(error.message || 'Unknown error occurred');
+    }
+  }
 };

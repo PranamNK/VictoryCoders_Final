@@ -22,6 +22,9 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
+  /* New State */
+  const [images, setImages] = useState<FileList | null>(null);
+
   const [editingReview, setEditingReview] = useState<string | null>(null);
 
   useEffect(() => {
@@ -52,10 +55,26 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
 
     setSubmitting(true);
     try {
-      const response = await reviewAPI.create(templeId, rating, comment);
+      const formData = new FormData();
+      formData.append('rating', rating.toString());
+      formData.append('comment', comment);
+
+      if (images) {
+        for (let i = 0; i < images.length; i++) {
+          formData.append('images', images[i]);
+        }
+      }
+
+      const response = await reviewAPI.create(templeId, formData);
       setReviews([response.data, ...reviews]);
       setComment('');
       setRating(5);
+      setImages(null);
+
+      // Reset file input
+      const fileInput = document.getElementById('review-images') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+
       toast({
         title: 'Review submitted!',
         description: 'Thank you for sharing your experience',
@@ -122,6 +141,17 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
   return (
     <div className="space-y-6">
       {/* Write Review Form */}
+      {!isAuthenticated && (
+        <Card className="bg-muted/50">
+          <CardContent className="py-6 text-center">
+            <p className="text-muted-foreground mb-4">Please login to share your experience and photos</p>
+            <Button asChild>
+              <a href="/login">Login to Write a Review</a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       {isAuthenticated && (
         <Card>
           <CardHeader>
@@ -148,6 +178,22 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
                   {comment.length}/500 characters
                 </p>
               </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">Add Photos</label>
+                <input
+                  id="review-images"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => setImages(e.target.files)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Upload up to 5 photos (JPG, PNG)
+                </p>
+              </div>
+
               <Button type="submit" disabled={submitting}>
                 {submitting ? (
                   <>
@@ -210,6 +256,23 @@ const TempleReviews = ({ templeId }: TempleReviewsProps) => {
                         )}
                       </div>
                       <p className="mt-3 text-sm text-muted-foreground">{review.comment}</p>
+
+                      {/* Review Images */}
+                      {review.images && review.images.length > 0 && (
+                        <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+                          {review.images.map((img, index) => (
+                            <img
+                              key={index}
+                              src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/..${img}`}
+                              alt={`Review image ${index + 1}`}
+                              className="h-24 w-24 object-cover rounded-md border"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <Separator className="mt-6" />

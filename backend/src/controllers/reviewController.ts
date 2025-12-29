@@ -26,10 +26,11 @@ export const getReviews = async (req: Request, res: Response) => {
       count: reviews.length,
       data: reviews
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Get reviews error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -40,6 +41,14 @@ export const getReviews = async (req: Request, res: Response) => {
 export const createReview = async (req: AuthRequest, res: Response) => {
   try {
     const { rating, comment, visitDate } = req.body;
+
+    // Validate required fields
+    if (!rating || !comment) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide rating and comment'
+      });
+    }
 
     const temple = await Temple.findOne({ id: req.params.id });
 
@@ -71,12 +80,18 @@ export const createReview = async (req: AuthRequest, res: Response) => {
       });
     }
 
+    // Process uploaded images
+    const images = req.files
+      ? (req.files as Express.Multer.File[]).map(file => `/uploads/${file.filename}`)
+      : [];
+
     const review = await Review.create({
       temple: temple._id,
       user: user._id,
       rating,
       comment,
-      visitDate: visitDate || undefined
+      visitDate: visitDate || undefined,
+      images
     });
 
     const populatedReview = await Review.findById(review._id).populate('user', 'name');
@@ -85,10 +100,11 @@ export const createReview = async (req: AuthRequest, res: Response) => {
       success: true,
       data: populatedReview
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Create review error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -132,10 +148,11 @@ export const updateReview = async (req: AuthRequest, res: Response) => {
       success: true,
       data: review
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Update review error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -176,10 +193,11 @@ export const deleteReview = async (req: AuthRequest, res: Response) => {
       success: true,
       data: {}
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Delete review error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };

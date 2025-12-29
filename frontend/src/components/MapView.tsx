@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Locate } from 'lucide-react';
 import { Temple } from '@/data/temples';
 import { Button } from './ui/button';
@@ -31,6 +31,7 @@ const MapView = ({ temples, selectedTemple, onTempleSelect }: MapViewProps) => {
       Mangalore: [74.856, 12.9141],
       Udupi: [74.7421, 13.3409],
       Kundapura: [74.6897, 13.6281],
+      "Uttara Kannada": [74.4851, 14.0940],
     };
 
     const base = baseCoords[temple.region] || [74.856, 13.0827];
@@ -43,8 +44,7 @@ const MapView = ({ temples, selectedTemple, onTempleSelect }: MapViewProps) => {
     return L.divIcon({
       className: styles.customMarker,
       html: `
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="${
-          isSelected ? "hsl(31 92% 45%)" : "hsl(27 96% 61%)"
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="${isSelected ? "hsl(31 92% 45%)" : "hsl(27 96% 61%)"
         }" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: scale(${isSelected ? 1.25 : 1}); transition: transform 0.2s;">
           <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
           <circle cx="12" cy="10" r="3"/>
@@ -83,7 +83,7 @@ const MapView = ({ temples, selectedTemple, onTempleSelect }: MapViewProps) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ZoomControl position="topright" />
-        
+
         {temples.map((temple) => {
           const coords = getTempleCoords(temple);
           const isSelected = selectedTemple?.id === temple.id;
