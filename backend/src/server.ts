@@ -83,19 +83,25 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 // Connect to database and start server
-connectDatabase().then(() => {
-  const server = app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-  });
+// Connect to database and start server
+if (process.env.NODE_ENV !== 'production') {
+  connectDatabase().then(() => {
+    const server = app.listen(PORT, () => {
+      console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    });
 
-  // Handle unhandled promise rejections
-  process.on('unhandledRejection', (err: Error) => {
-    console.log(`Error: ${err.message}`);
-    server.close(() => process.exit(1));
+    // Handle unhandled promise rejections
+    process.on('unhandledRejection', (err: Error) => {
+      console.log(`Error: ${err.message}`);
+      server.close(() => process.exit(1));
+    });
+  }).catch((err) => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
   });
-}).catch((err) => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
-});
+} else {
+  // For Vercel/Production
+  connectDatabase();
+}
 
 export default app;
