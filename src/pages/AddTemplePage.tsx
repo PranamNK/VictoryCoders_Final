@@ -26,7 +26,7 @@ const AddTemplePage = () => {
     contactEmail: user?.email || ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isAuthenticated) {
@@ -35,21 +35,57 @@ const AddTemplePage = () => {
       return;
     }
 
-    // In a real app, you would upload the file and send data to backend here
-    console.log("Submitting temple data:", formData);
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.templeName);
+      formDataToSend.append('location', formData.location);
+      formDataToSend.append('deity', formData.deity);
+      formDataToSend.append('history', formData.history);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('shortDescription', formData.description.substring(0, 100) + "...");
+      formDataToSend.append('region', 'Udupi'); // Defaulting to Udupi as it's required
 
-    toast.success(translate("Thank you! Your temple listing has been submitted for review."));
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
 
-    // Reset form
-    setFormData({
-      templeName: "",
-      location: "",
-      deity: "",
-      history: "",
-      description: "",
-      image: null,
-      contactEmail: user?.email || ""
-    });
+      const token = localStorage.getItem('token');
+      // Use VITE_API_URL or fallback to relative path if not defined (proxied by Vercel)
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+
+      const response = await fetch(`${apiUrl}/temples`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataToSend
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit temple');
+      }
+
+      toast.success(translate("Thank you! Your temple listing has been submitted successfully."));
+
+      // Reset form
+      setFormData({
+        templeName: "",
+        location: "",
+        deity: "",
+        history: "",
+        description: "",
+        image: null,
+        contactEmail: user?.email || ""
+      });
+
+      // Navigate to home or listing page after short delay
+      setTimeout(() => navigate('/'), 2000);
+
+    } catch (error: any) {
+      console.error("Error submitting temple:", error);
+      toast.error(error.message || translate("Failed to submit temple listing. Please try again."));
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

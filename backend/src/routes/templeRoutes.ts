@@ -20,7 +20,7 @@ router.use('/:id/reviews', reviewRoutes);
 
 router.route('/')
   .get(getTemples)
-  .post(protect, authorize('admin'), upload.single('image'), createTemple);
+  .post(protect, upload.single('image'), createTemple);
 
 router.route('/:id')
   .get(getTemple)
